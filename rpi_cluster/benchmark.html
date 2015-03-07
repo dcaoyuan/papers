@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2. Akka 分片集群水平扩展能力分析 &mdash; papers 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="papers 0.1.0 documentation" href="../index.html" />
+    <link rel="prev" title="1. Raspberry Pi 2 B Cluster" href="component.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="component.html" title="1. Raspberry Pi 2 B Cluster"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">papers 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="akka">
+<h1>2. Akka 分片集群水平扩展能力分析<a class="headerlink" href="#akka" title="Permalink to this headline">¶</a></h1>
+<p>跟很多分片集群解决方案不同，akka 分片集群（sharding cluster）中每一个节点都在直接访问本地数据的同时，也都可以作为 proxy 访问集群中其它节点的数据。在我看来，这是 akka 分片集群水平扩展（scale-out）能力可能接近线性的关键。</p>
+<div class="section" id="id1">
+<h2>2.1. 测试<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>在采用树莓派 2 组成的 10 个节点的集群中，我用 astore 测试了 akka 分片的水平扩展能力，结果显示出非常好的线性。我们不妨在此做个简单的分析。</p>
+<img alt="rpi cluster running" src="../_images/rpi_cluster_running.png" />
+<img alt="rpi cluster req/secs" src="../_images/rpi_cluster_qps.png" />
+<img alt="rpi cluster KB/secs" src="../_images/rpi_cluster_trans.png" />
+</div>
+<div class="section" id="id2">
+<h2>2.2. 估算<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>设 c 为连接数，<span class="math">\tau</span> 为平均响应时间，则单节点时 qps 为：</p>
+<p><span class="math">qps = c \left(\frac{1}{\tau}\right)</span></p>
+<p>当节点数为 n 时，数据有 <span class="math">\frac{1}{n}</span> 的概率在本节点，而 <span class="math">\frac{n-1}{n}</span> 的概率在其它节点。假设在本节点的平均响应时间仍然为 <span class="math">\tau_1</span>，在其它节点的则为 <span class="math">\tau_2</span>，则总体的平均响应时间为：</p>
+<p><span class="math">\tau=\frac{\tau_1 + (n-1)\tau_2}{n}</span></p>
+<p>这时，qps 为：</p>
+<p><span class="math">qps
+= cn \left(\frac{1}{\tau}\right)
+= cn \left(\frac{1}{\frac{\tau_1 + (n-1)\tau_2}{n}}\right)
+= cn \left(\frac{n}{\tau_1 + (n-1)\tau_2}\right)
+= cn \left(\frac{n}{\tau_2n - (\tau_2-\tau_1)}\right)</span></p>
+<p>当 <span class="math">(\tau_2-\tau_1)</span> 随着 n 的增加而越来越小于 <span class="math">\tau_2n</span> 时，我们可以开始忽略 <span class="math">(\tau_2-\tau_1)</span> 项，也即：</p>
+<p><span class="math">qps
+\propto cn\left(\frac{n}{\tau_2n}\right)
+\propto cn\left(\frac{1}{\tau_2}\right)
+\propto n</span></p>
+</div>
+<div class="section" id="id3">
+<h2>2.3. 验证<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>下面我们看看几个测试中实际的数据：</p>
+<p>连接数 <span class="math">c=100</span></p>
+<p>单节点时，平均响应时间 <span class="math">\tau=0.06s</span>，则：</p>
+<p><span class="math">qps = 100 \left(\frac{1}{0.06}\right) = 1667</span></p>
+<p>多节点情况下，假设 <span class="math">\tau_1=0.06s</span> 不变，根据测试数据可以估算出 <span class="math">\tau_2=0.180s</span> 左右，则：</p>
+<p><span class="math">qps=100n \left(\frac{n}{0.18n - 0.12}\right)</span></p>
+<p>从这个公式可以看出，当 n 逐渐增大时，<span class="math">0.18n - 0.12</span> 中的 <span class="math">0.18n</span> 比重很快上升，当 n = 7 时，<span class="math">0.18n=1.26</span>，已经是 0.12 的 10 倍，</p>
+<p>那么这个公式是否真的有效呢？我计算了 n 从 2 到 10 的数据，跟实测数据很接近：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="38%" />
+<col width="38%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">n</th>
+<th class="head">估算</th>
+<th class="head">实测</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>1667</td>
+<td>1643</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>1667</td>
+<td>1505</td>
+</tr>
+<tr class="row-even"><td>3</td>
+<td>2143</td>
+<td>2102</td>
+</tr>
+<tr class="row-odd"><td>4</td>
+<td>2667</td>
+<td>2685</td>
+</tr>
+<tr class="row-even"><td>5</td>
+<td>3205</td>
+<td>3243</td>
+</tr>
+<tr class="row-odd"><td>6</td>
+<td>3750</td>
+<td>3749</td>
+</tr>
+<tr class="row-even"><td>7</td>
+<td>4298</td>
+<td>4297</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>4848</td>
+<td>4846</td>
+</tr>
+<tr class="row-even"><td>9</td>
+<td>5400</td>
+<td>5370</td>
+</tr>
+<tr class="row-odd"><td>10</td>
+<td>5952</td>
+<td>5920</td>
+</tr>
+</tbody>
+</table>
+<img alt="rpi cluster Eval vs Test Results" src="../_images/rpi_cluster_eval_vs_test.png" />
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2. Akka 分片集群水平扩展能力分析</a><ul>
+<li><a class="reference internal" href="#id1">2.1. 测试</a></li>
+<li><a class="reference internal" href="#id2">2.2. 估算</a></li>
+<li><a class="reference internal" href="#id3">2.3. 验证</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="component.html"
+                        title="previous chapter">1. Raspberry Pi 2 B Cluster</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/rpi_cluster/benchmark.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="component.html" title="1. Raspberry Pi 2 B Cluster"
+             >previous</a> |</li>
+        <li><a href="../index.html">papers 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Caoyuan Deng.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

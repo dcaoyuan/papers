@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. Raspberry Pi 2 B Cluster &mdash; papers 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="papers 0.1.0 documentation" href="../index.html" />
+    <link rel="next" title="2. Akka 分片集群水平扩展能力分析" href="benchmark.html" />
+    <link rel="prev" title="Welcome to papers’s documentation!" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="benchmark.html" title="2. Akka 分片集群水平扩展能力分析"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to papers’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">papers 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="raspberry-pi-2-b-cluster">
+<h1>1. Raspberry Pi 2 B Cluster<a class="headerlink" href="#raspberry-pi-2-b-cluster" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="component">
+<h2>1.1. Component<a class="headerlink" href="#component" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="18%" />
+<col width="8%" />
+<col width="3%" />
+<col width="4%" />
+<col width="8%" />
+<col width="3%" />
+<col width="6%" />
+<col width="5%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Item</th>
+<th class="head">Description</th>
+<th class="head">Dimensions (mm)</th>
+<th class="head" colspan="2">Unit Power (W)</th>
+<th class="head">Unit Price (￥)</th>
+<th class="head">Units</th>
+<th class="head">Price (￥)</th>
+<th class="head">Power (W)</th>
+<th class="head">Link</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Raspberry Pi 2 Model B</td>
+<td>单板机 Single Board Computer</td>
+<td>85 x 56 x 17</td>
+<td>3.0</td>
+<td>MyCase</td>
+<td>258.00</td>
+<td>10</td>
+<td>2,580.00</td>
+<td>36.0</td>
+<td><a class="reference external" href="http://cn.element14.com/raspberry-pi-accessories?ICID=ap-rpi-2-hwb">http://cn.element14.com/raspberry-pi-accessories?ICID=ap-rpi-2-hwb</a></td>
+</tr>
+<tr class="row-odd"><td>NETGEAR GS308</td>
+<td>8 口千兆交换机 1Gbps Network Switch</td>
+<td>158 x 102 x 26</td>
+<td>3.8</td>
+<td>Max</td>
+<td>299.00</td>
+<td>2</td>
+<td>598.00</td>
+<td>7.6</td>
+<td><a class="reference external" href="http://item.jd.com/672092.html">http://item.jd.com/672092.html</a></td>
+</tr>
+<tr class="row-even"><td>ORICO DCP-4S-BK</td>
+<td>4 口 USB 充电器 5V2.4Ax4 USB-charger</td>
+<td>96 x 57 x 21</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>79.00</td>
+<td>3</td>
+<td>237.00</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://item.jd.com/1208500.html">http://item.jd.com/1208500.html</a></td>
+</tr>
+<tr class="row-odd"><td>SAMZHE SZ-601BE</td>
+<td>CAT.6E 网线 Network Cable</td>
+<td>1000</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>7.90</td>
+<td>12</td>
+<td>98.80</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://item.jd.com/636308.html">http://item.jd.com/636308.html</a></td>
+</tr>
+<tr class="row-even"><td>SAMZHE BL-SZ03</td>
+<td>AM/Micro USB 数据线 USB-cable</td>
+<td>300</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>5.9</td>
+<td>12</td>
+<td>70.80</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://item.jd.com/922605.html">http://item.jd.com/922605.html</a></td>
+</tr>
+<tr class="row-odd"><td>SanDisk 16G Class 10</td>
+<td>Micro SD Card</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>42.90</td>
+<td>10</td>
+<td>429.00</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://item.jd.com/679772.html">http://item.jd.com/679772.html</a></td>
+</tr>
+<tr class="row-even"><td colspan="10">&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>e代家园 GRS11-35</td>
+<td>配线箱 Case</td>
+<td>350 x 300 x 120</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>142.00</td>
+<td>1</td>
+<td>142.00</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://detail.tmall.com/item.htm?id=40266420582">http://detail.tmall.com/item.htm?id=40266420582</a></td>
+</tr>
+<tr class="row-even"><td>e代家园 GDC-P01</td>
+<td>电源模块插座 Power Supply</td>
+<td>165 x 49 x 36</td>
+<td>40.0</td>
+<td>Output</td>
+<td>99.00</td>
+<td>1</td>
+<td>99.00</td>
+<td>40.0</td>
+<td><a class="reference external" href="http://detail.tmall.com/item.htm?id=42224837564">http://detail.tmall.com/item.htm?id=42224837564</a></td>
+</tr>
+<tr class="row-odd"><td>MIG SL-303CB</td>
+<td>电源转换插座 Power Outlet</td>
+<td>54 x 40 x 33</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>19.90</td>
+<td>1</td>
+<td>19.90</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://item.jd.com/899125.html">http://item.jd.com/899125.html</a></td>
+</tr>
+<tr class="row-even"><td>单通铜螺柱 M2.5*20+6</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>0.36</td>
+<td>36</td>
+<td>12.96</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://detail.tmall.com/item.htm?id=26930900577">http://detail.tmall.com/item.htm?id=26930900577</a></td>
+</tr>
+<tr class="row-odd"><td>单通铜螺柱 M2.5*5+5</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>0.18</td>
+<td>12</td>
+<td>2.16</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://detail.tmall.com/item.htm?id=26930900577">http://detail.tmall.com/item.htm?id=26930900577</a></td>
+</tr>
+<tr class="row-even"><td>双通铜螺柱 M2.5*20</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>0.28</td>
+<td>12</td>
+<td>3.36</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://detail.tmall.com/item.htm?id=19636777951">http://detail.tmall.com/item.htm?id=19636777951</a></td>
+</tr>
+<tr class="row-odd"><td>GT-140M</td>
+<td>尼龙扎带（x1000）</td>
+<td>140 x 2.5</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>30.00</td>
+<td>1</td>
+<td>30.00</td>
+<td>&nbsp;</td>
+<td><a class="reference external" href="http://detail.tmall.com/item.htm?id=36844630222">http://detail.tmall.com/item.htm?id=36844630222</a></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>4,914.48</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="intallation">
+<h2>1.2. Intallation<a class="headerlink" href="#intallation" title="Permalink to this headline">¶</a></h2>
+<p>Heght 90mm</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. Raspberry Pi 2 B Cluster</a><ul>
+<li><a class="reference internal" href="#component">1.1. Component</a></li>
+<li><a class="reference internal" href="#intallation">1.2. Intallation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to papers&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="benchmark.html"
+                        title="next chapter">2. Akka 分片集群水平扩展能力分析</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/rpi_cluster/component.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="benchmark.html" title="2. Akka 分片集群水平扩展能力分析"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to papers’s documentation!"
+             >previous</a> |</li>
+        <li><a href="../index.html">papers 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Caoyuan Deng.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

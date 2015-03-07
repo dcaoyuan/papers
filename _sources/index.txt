@@ -11,7 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   includeme
+   rpi_cluster/component
+   rpi_cluster/benchmark
 
 Indices and tables
 ==================

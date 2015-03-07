@@ -49,7 +49,9 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
 clean:
-	rm -rf $(BUILDDIR)/*
+#	rm -rf $(BUILDDIR)/*
+	find $(BUILDDIR)/html -type 'f' | grep -v ".git/*" | xargs rm 
+	find $(BUILDDIR)/html -type 'd' | grep -v ".git" | xargs rmdir
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

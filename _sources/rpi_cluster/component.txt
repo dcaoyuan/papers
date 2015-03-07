@@ -42,4 +42,39 @@ Component
 Intallation
 ----------------
 
-Heght 90mm
+Parts:
+
+.. image:: images/install_01.jpg
+   :alt: installations 
+
+Bundled 4 x Raspberry Pis and 1 x USB Charger together as one group: height 90mm
+
+.. image:: images/install_02.jpg
+   :alt: installations 
+
+The layout: 3 x groups stand on 2 x 8-port network switches 
+
+.. image:: images/install_03.jpg
+   :alt: installations 
+
+The case with PSU installed
+
+.. image:: images/install_04.jpg
+   :alt: installations 
+
+Finished:
+
+.. image:: images/install_05.jpg
+   :alt: installations 
+
+Lighting: 
+
+.. image:: images/install_06.jpg
+   :alt: installations 
+
+Lighting:
+
+.. image:: images/install_07.jpg
+   :alt: installations 
+
+

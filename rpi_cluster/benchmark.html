@@ -57,31 +57,31 @@
 </div>
 <div class="section" id="id2">
 <h2>2.2. 估算<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>设 c 为连接数，<span class="math">\tau</span> 为平均响应时间，则单节点时 qps 为：</p>
-<p><span class="math">qps = c \left(\frac{1}{\tau}\right)</span></p>
-<p>当节点数为 n 时，数据有 <span class="math">\frac{1}{n}</span> 的概率在本节点，而 <span class="math">\frac{n-1}{n}</span> 的概率在其它节点。假设在本节点的平均响应时间仍然为 <span class="math">\tau_1</span>，在其它节点的则为 <span class="math">\tau_2</span>，则总体的平均响应时间为：</p>
-<p><span class="math">\tau=\frac{\tau_1 + (n-1)\tau_2}{n}</span></p>
+<p>设 c 为连接数，<img class="math" src="../_images/math/d9e99c35d3632bb156b7aca0e93cd78a148a10e8.png" alt="\tau"/> 为平均响应时间，则单节点时 qps 为：</p>
+<p><img class="math" src="../_images/math/67d55c20e49ce746f5fc08f5e18ad69afc31346b.png" alt="qps = c \left(\frac{1}{\tau}\right)"/></p>
+<p>当节点数为 n 时，数据有 <img class="math" src="../_images/math/0c88c8b3aaab751fb75b34de70ea3bc0459cae31.png" alt="\frac{1}{n}"/> 的概率在本节点，而 <img class="math" src="../_images/math/030ad353fa9f03105193b5b30944081677408674.png" alt="\frac{n-1}{n}"/> 的概率在其它节点。假设在本节点的平均响应时间仍然为 <img class="math" src="../_images/math/7535961332c7b400bb1f935a141711a30c82cd87.png" alt="\tau_1"/>，在其它节点的则为 <img class="math" src="../_images/math/be318f54101c2ca6892cc82d4ccbf69f65c6d201.png" alt="\tau_2"/>，则总体的平均响应时间为：</p>
+<p><img class="math" src="../_images/math/ef14c1d36a89d14e34d965cc6985568e565acd52.png" alt="\tau=\frac{\tau_1 + (n-1)\tau_2}{n}"/></p>
 <p>这时，qps 为：</p>
-<p><span class="math">qps
+<p><img class="math" src="../_images/math/f1ee3c8b147f5a1beb935f9ef8fff4cf65cdea41.png" alt="qps
 = cn \left(\frac{1}{\tau}\right)
 = cn \left(\frac{1}{\frac{\tau_1 + (n-1)\tau_2}{n}}\right)
 = cn \left(\frac{n}{\tau_1 + (n-1)\tau_2}\right)
-= cn \left(\frac{n}{\tau_2n - (\tau_2-\tau_1)}\right)</span></p>
-<p>当 <span class="math">(\tau_2-\tau_1)</span> 随着 n 的增加而越来越小于 <span class="math">\tau_2n</span> 时，我们可以开始忽略 <span class="math">(\tau_2-\tau_1)</span> 项，也即：</p>
-<p><span class="math">qps
+= cn \left(\frac{n}{\tau_2n - (\tau_2-\tau_1)}\right)"/></p>
+<p>当 <img class="math" src="../_images/math/70c8bf51bd5a0c066c453240b474a7019c9b56cd.png" alt="(\tau_2-\tau_1)"/> 随着 n 的增加而越来越小于 <img class="math" src="../_images/math/cfdf047bcc64daf15248a3f5d52bbc6b8e70d998.png" alt="\tau_2n"/> 时，我们可以开始忽略 <img class="math" src="../_images/math/70c8bf51bd5a0c066c453240b474a7019c9b56cd.png" alt="(\tau_2-\tau_1)"/> 项，也即：</p>
+<p><img class="math" src="../_images/math/4209fa6c26ed2e08b6842c421cfaffd923148cfa.png" alt="qps
 \propto cn\left(\frac{n}{\tau_2n}\right)
 \propto cn\left(\frac{1}{\tau_2}\right)
-\propto n</span></p>
+\propto n"/></p>
 </div>
 <div class="section" id="id3">
 <h2>2.3. 验证<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>下面我们看看几个测试中实际的数据：</p>
-<p>连接数 <span class="math">c=100</span></p>
-<p>单节点时，平均响应时间 <span class="math">\tau=0.06s</span>，则：</p>
-<p><span class="math">qps = 100 \left(\frac{1}{0.06}\right) = 1667</span></p>
-<p>多节点情况下，假设 <span class="math">\tau_1=0.06s</span> 不变，根据测试数据可以估算出 <span class="math">\tau_2=0.180s</span> 左右，则：</p>
-<p><span class="math">qps=100n \left(\frac{n}{0.18n - 0.12}\right)</span></p>
-<p>从这个公式可以看出，当 n 逐渐增大时，<span class="math">0.18n - 0.12</span> 中的 <span class="math">0.18n</span> 比重很快上升，当 n = 7 时，<span class="math">0.18n=1.26</span>，已经是 0.12 的 10 倍，</p>
+<p>连接数 <img class="math" src="../_images/math/2180ceaa88bcd99343516b7eacfe4dcc882e189e.png" alt="c=100"/></p>
+<p>单节点时，平均响应时间 <img class="math" src="../_images/math/2a4b455389c576f995a26a45843d14171d308b08.png" alt="\tau=0.06s"/>，则：</p>
+<p><img class="math" src="../_images/math/a4c4dc81bce4052fcb190acdf814db6290b53dde.png" alt="qps = 100 \left(\frac{1}{0.06}\right) = 1667"/></p>
+<p>多节点情况下，假设 <img class="math" src="../_images/math/c4da87f51a011ba2828ba0fb7ca361fdc324fd1f.png" alt="\tau_1=0.06s"/> 不变，根据测试数据可以估算出 <img class="math" src="../_images/math/fdffa3588366e6f7ade7cc24530b326825a12309.png" alt="\tau_2=0.180s"/> 左右，则：</p>
+<p><img class="math" src="../_images/math/eb036b9b7a27afe9af51072d9b6bdb3d57274b7b.png" alt="qps=100n \left(\frac{n}{0.18n - 0.12}\right)"/></p>
+<p>从这个公式可以看出，当 n 逐渐增大时，<img class="math" src="../_images/math/1c9875c5cb19142c2db9f5f36ecc1dbc6741ad5b.png" alt="0.18n - 0.12"/> 中的 <img class="math" src="../_images/math/e38fbc846a60869d6da777929d02a7820a71b25e.png" alt="0.18n"/> 比重很快上升，当 n = 7 时，<img class="math" src="../_images/math/98390c7cea6601711223daa4216301e371726c5c.png" alt="0.18n=1.26"/>，已经是 0.12 的 10 倍，</p>
 <p>那么这个公式是否真的有效呢？我计算了 n 从 2 到 10 的数据，跟实测数据很接近：</p>
 <table border="1" class="docutils">
 <colgroup>

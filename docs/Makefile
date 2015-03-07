@@ -50,7 +50,7 @@ help:
 
 clean:
 #	rm -rf $(BUILDDIR)/*
-	find $(BUILDDIR)/html -type 'f' | grep -v ".git/*" | xargs rm 
+	find $(BUILDDIR)/html -type 'f' | grep -v ".git/*\|.nojekyll" | xargs rm 
 	find $(BUILDDIR)/html -type 'd' | grep -v ".git" | xargs rmdir
 
 html:

@@ -1,15 +1,12 @@
-Akka 分片集群水平扩展能力分析
-============================================
+Analysis of Scale-out Ability of Akka Sharding cluster
+============================================================
 
 跟很多分片集群解决方案不同，akka 分片集群（sharding cluster）中每一个节点都在直接访问本地数据的同时，也都可以作为 proxy 访问集群中其它节点的数据。在我看来，这是 akka 分片集群水平扩展（scale-out）能力可能接近线性的关键。
 
 测试
 -------
 
-在采用树莓派 2 组成的 10 个节点的集群中，我用 astore 测试了 akka 分片的水平扩展能力，结果显示出非常好的线性。我们不妨在此做个简单的分析。
-
-.. image:: images/rpi_cluster_running.png
-   :alt: rpi cluster running
+在采用 Raspberry Pi 2 Model B 组成的 10 x nodes cluster ，我用 astore 测试了 akka 分片的水平扩展能力，结果显示出非常好的线性。我们不妨在此做个简单的分析。
 
 .. image:: images/rpi_cluster_qps.png
    :alt: rpi cluster req/secs
@@ -20,11 +17,11 @@ Akka 分片集群水平扩展能力分析
 估算
 -----------
 
-设 c 为连接数，\ :math:`\tau` 为平均响应时间，则单节点时 qps 为：
+设 c 为 number of connections，\ :math:`\tau` 为Average response time（平均响应时间），则单节点（single node）时 qps 为：
 
 :math:`qps = c \left(\frac{1}{\tau}\right)`
 
-当节点数为 n 时，数据有 \ :math:`\frac{1}{n}` 的概率在本节点，而 \ :math:`\frac{n-1}{n}` 的概率在其它节点。假设在本节点的平均响应时间仍然为 \ :math:`\tau_1`，在其它节点的则为 \ :math:`\tau_2`，则总体的平均响应时间为：
+当节点数（Number of nodes）为 n 时，数据有 \ :math:`\frac{1}{n}` 的概率在本节点，而 \ :math:`\frac{n-1}{n}` 的概率在其它节点。假设在本节点的 average response time（平均响应时间）仍然为 \ :math:`\tau_1`，在其它节点的则为 \ :math:`\tau_2`，则总体的 average response time（平均响应时间）为：
 
 :math:`\tau=\frac{\tau_1 + (n-1)\tau_2}{n}`
 
@@ -51,11 +48,11 @@ Akka 分片集群水平扩展能力分析
 
 连接数 \ :math:`c=100`
 
-单节点时，平均响应时间 \ :math:`\tau=0.06s`，则：
+单节点（single node）时，平均响应时间 \ :math:`\tau=0.06s`，则：
 
 :math:`qps = 100 \left(\frac{1}{0.06}\right) = 1667`
 
-多节点情况下，假设 \ :math:`\tau_1=0.06s` 不变，根据测试数据可以估算出 \ :math:`\tau_2=0.180s` 左右，则：
+多节点（multiple nodes）情况下，假设 \ :math:`\tau_1=0.06s` 不变，根据测试数据可以估算出 \ :math:`\tau_2=0.180s` 左右，则：
 
 :math:`qps=100n \left(\frac{n}{0.18n - 0.12}\right)`
 

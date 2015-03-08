@@ -38,8 +38,63 @@ Component
 |                        |                                      |                 |       |        |                 |       |   4,914.48 |           |                                                                    |
 +------------------------+--------------------------------------+-----------------+-------+--------+-----------------+-------+------------+-----------+--------------------------------------------------------------------+
 
+**Q**: Why 2 x 8-port 1Gbits network switches?
+
+**A**: 12 Pis use 12 ports. 2 switches will be connected together, thus use one port for each.
+We'll leave 2 ports for external working network. 12 + 1x2 + 2 = 16
+
+**Q**: Why choose this 4 port USB power charger?
+
+**A**: The dimentions are perfect for 4 Pis, and the power input connector is standand 5V2.4A 5.5*2.5mm, which is just suitable for GDC-P01 power supply.
+
+**Q**: How to connect 4 Pis together?
+
+**A**: At the bottom, use 4 x M2.5*5 + 5 bolts; And 4 x M2.5*20 + 5 between two Pis; At the top, use 4 x M2.5*20. The total heigh is 90mm, when it stands on network switch (26mm heigt), it's 116mm height, just suitable for the case's height(120mm).
+
+**Q**: Is the width of this case enough for 3 groups Pis? 
+
+**A**: Almost. Where you have to lower about 20mm the USB charger for the right group. Furtnately, when 2 network switches are placed one by one at the bottom, there is enough space left on the right side for the lowered USB charger.
+
+**Q**: Is there still space for USB hard driver?
+
+**A**: On the top-left side of the case, there is still space for about 4+ USB hard drivers, but you should choose the one that is about 110mm length, and put it vertically, Another choose is use 1.8" hard driver, just like me.
 
 Intallation
 ----------------
 
-Heght 90mm
+Parts:
+
+.. image:: images/install_01.jpg
+   :alt: installations 
+
+Bundled 4 x Raspberry Pis and 1 x USB Charger together as one group: height 90mm
+
+.. image:: images/install_02.jpg
+   :alt: installations 
+
+The layout: 3 x groups stand on 2 x 8-port network switches 
+
+.. image:: images/install_03.jpg
+   :alt: installations 
+
+The case with PSU installed
+
+.. image:: images/install_04.jpg
+   :alt: installations 
+
+Finished:
+
+.. image:: images/install_05.jpg
+   :alt: installations 
+
+Lighting: 
+
+.. image:: images/install_06.jpg
+   :alt: installations 
+
+Lighting:
+
+.. image:: images/install_07.jpg
+   :alt: installations 
+
+

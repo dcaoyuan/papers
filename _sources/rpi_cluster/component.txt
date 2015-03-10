@@ -1,7 +1,7 @@
 Raspberry Pi 2 B Cluster 
 ======================================
 
-Component
+Parts
 ------------------
 
 +------------------------+--------------------------------------+-----------------+----------------+-----------------+-------+------------+-----------+--------------------------------------------------------------------+
@@ -59,8 +59,8 @@ We'll leave 2 ports for external working network. 12 + 1x2 + 2 = 16
 
 **A**: On the top-left side of the case, there is still space for about 4+ USB hard drivers, but you should choose the one that is about 110mm length, and put it vertically, Another choose is use 1.8" hard driver, just like me.
 
-Intallation
-----------------
+Installation - Hardware
+-----------------------
 
 Parts:
 
@@ -97,4 +97,126 @@ Lighting:
 .. image:: images/install_07.jpg
    :alt: installations 
 
+Installation - Software
+------------------------
+
+1. check SD card device name:
+
+.. code-block:: shell
+
+  $ df ­h 
+  /dev/mmcblk0p1  7.5G  2.8G  4.8G  37% /run/media/dcaoyuan/....
+
+2. umount SD card
+
+.. code-block:: shell
+
+  $ umount /dev/mmcblk0p1
+
+3. dd image
+
+.. code-block:: shell
+
+  $ sudo dd bs=4M if=~/2015-01-31-raspbian.img of=/dev/mmcblk0
+  $ sudo sync
+
+4. resizing partitions 
+
+.. code-block:: shell
+
+  $ ssh pi@192.168.2.201
+  password: raspberry
+  $ sudo raspi-config
+    selecting menu item:
+    EXPAND­ ROOTFS ­ Expand Root Partition to Fill SD Card
+    reboot
+
+5. ssh login no password
+
+.. code-block:: shell
+
+  $ ssh pi@pi01 mkdir -p .ssh
+  pi@pi01's password: 
+
+  $ cat ~/.ssh/id_rsa.pub | ssh pi@pi01 'cat >> .ssh/authorized_keys'
+  pi@pi01's password:
+
+  $ ssh pi@pi01
+
+6. Extending the life of the SD card
+
+.. code-block:: shell
+
+  $ vi /etc/fstab
+  
+  tmpfs /tmp              tmpfs defaults,noatime,nosuid,size=100m                 0 0
+  tmpfs /var/tmp          tmpfs defaults,noatime,nosuid,size=30m                  0 0
+  tmpfs /var/log          tmpfs defaults,noatime,nosuid,mode=0755,size=100m       0 0
+  tmpfs /var/run          tmpfs defaults,noatime,nosuid,mode=0755,size=2m         0 0
+  tmpfs /var/spool/mqueue tmpfs defaults,noatime,nosuid,mode=0700,gid=12,size=30m 0 0
+
+7. Attach external USB hard drive
+
+.. code-block:: shell
+
+  # All that max_usb_current=1 does is to set GPIO38 input high, which in turn turns on a 
+  # FET, which connects a second 39K resistor in parallel to an existing one, on pin 5 of 
+  # U13, the AP2553W6 USB power manager, lifting the current limit from 0.6A to double 
+  # that (1.2A)
+
+  $ sudo vi /boot/config.txt
+  # Added line:
+  max_usb_current=1
+
+  $ sudo reboot
+
+  # Verify gpio38 value (should be set to high, ie. 1)
+  $ ls /sys/class/gpio
+  export gpiochip0  unexport
+  $ echo 38 > /sys/class/gpio/export
+  $ cat /sys/class/gpio/gpio38/value
+  1
+
+8. Mount external hard drive
+
+.. code-block:: shell
+
+  $ sudo blkid
+  /dev/mmcblk0p1: SEC_TYPE="msdos" LABEL="boot" UUID="CB99-4C7E" TYPE="vfat" 
+  /dev/mmcblk0p2: UUID="1263ae8d-aaf3-41b6-9ac0-03e7fecb5d6a" TYPE="ext4" 
+  /dev/sda5: LABEL="NEWSMY" UUID="9A60889860887CAF" TYPE="ntfs" 
+
+  $ sudo mkfs.vfat -n 'usbdisk' -I /dev/sda5
+  $ sudo blkid
+  /dev/mmcblk0p1: SEC_TYPE="msdos" LABEL="boot" UUID="CB99-4C7E" TYPE="vfat" 
+  /dev/mmcblk0p2: UUID="1263ae8d-aaf3-41b6-9ac0-03e7fecb5d6a" TYPE="ext4" 
+  /dev/sda5: LABEL="usbdisk" UUID="61A7-F4D8" TYPE="vfat" 
+
+  $ sudo mkdir /media/usbhdd
+  $ sudo mount -t vfat -o uid=pi,gid=pi /dev/sdb5 /media/usbhdd
+
+  $ sudo vi /etc/fstab # add
+  UUID="61A7-F4D8" /media/usbhdd   vfat    defaults,uid=pi,gid=pi                 0 0
+
+  $ sudo reboot
+  $ df -h
+
+9. Change hostname
+
+.. code-block:: shell
+
+  $ sudo hostname pi01
+
+  $ sudo vi /etc/hostname # change to 
+  pi01
+
+  $ sudo vi /etc/hosts # add line
+  127.0.0.1 pi01
+
+  $ sudo /etc/init.d/hostname.sh start
+
+  $ exit
+  $ ssh pi@pi01
+  $ echo $HOSTNAME
+  pi01
 

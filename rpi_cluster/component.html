@@ -51,8 +51,8 @@
             
   <div class="section" id="raspberry-pi-2-b-cluster">
 <h1>1. Raspberry Pi 2 B Cluster<a class="headerlink" href="#raspberry-pi-2-b-cluster" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="component">
-<h2>1.1. Component<a class="headerlink" href="#component" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="parts">
+<h2>1.1. Parts<a class="headerlink" href="#parts" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="docutils">
 <colgroup>
 <col width="11%" />
@@ -249,8 +249,8 @@ We&#8217;ll leave 2 ports for external working network. 12 + 1x2 + 2 = 16</p>
 <p><strong>Q</strong>: Is there still space for USB hard driver?</p>
 <p><strong>A</strong>: On the top-left side of the case, there is still space for about 4+ USB hard drivers, but you should choose the one that is about 110mm length, and put it vertically, Another choose is use 1.8&#8221; hard driver, just like me.</p>
 </div>
-<div class="section" id="intallation">
-<h2>1.2. Intallation<a class="headerlink" href="#intallation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installation-hardware">
+<h2>1.2. Installation - Hardware<a class="headerlink" href="#installation-hardware" title="Permalink to this headline">¶</a></h2>
 <p>Parts:</p>
 <img alt="installations" src="../_images/install_01.jpg" />
 <p>Bundled 4 x Raspberry Pis and 1 x USB Charger together as one group: height 90mm</p>
@@ -266,6 +266,129 @@ We&#8217;ll leave 2 ports for external working network. 12 + 1x2 + 2 = 16</p>
 <p>Lighting:</p>
 <img alt="installations" src="../_images/install_07.jpg" />
 </div>
+<div class="section" id="installation-software">
+<h2>1.3. Installation - Software<a class="headerlink" href="#installation-software" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>check SD card device name:</li>
+</ol>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>df ­h
+/dev/mmcblk0p1  7.5G  2.8G  4.8G  37% /run/media/dcaoyuan/....
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li>umount SD card</li>
+</ol>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>umount /dev/mmcblk0p1
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li>dd image</li>
+</ol>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>sudo dd <span class="nv">bs</span><span class="o">=</span>4M <span class="k">if</span><span class="o">=</span>~/2015-01-31-raspbian.img <span class="nv">of</span><span class="o">=</span>/dev/mmcblk0
+<span class="nv">$ </span>sudo sync
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li>resizing partitions</li>
+</ol>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>ssh pi@192.168.2.201
+password: raspberry
+<span class="nv">$ </span>sudo raspi-config
+  selecting menu item:
+  EXPAND­ ROOTFS ­ Expand Root Partition to Fill SD Card
+  reboot
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li>ssh login no password</li>
+</ol>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>ssh pi@pi01 mkdir -p .ssh
+pi@pi01<span class="s1">&#39;s password:</span>
+
+<span class="s1">$ cat ~/.ssh/id_rsa.pub | ssh pi@pi01 &#39;</span>cat &gt;&gt; .ssh/authorized_keys<span class="s1">&#39;</span>
+<span class="s1">pi@pi01&#39;</span>s password:
+
+<span class="nv">$ </span>ssh pi@pi01
+</pre></div>
+</div>
+<ol class="arabic simple" start="6">
+<li>Extending the life of the SD card</li>
+</ol>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>vi /etc/fstab
+
+tmpfs /tmp              tmpfs defaults,noatime,nosuid,size<span class="o">=</span>100m                 <span class="m">0</span> 0
+tmpfs /var/tmp          tmpfs defaults,noatime,nosuid,size<span class="o">=</span>30m                  <span class="m">0</span> 0
+tmpfs /var/log          tmpfs defaults,noatime,nosuid,mode<span class="o">=</span>0755,size<span class="o">=</span>100m       <span class="m">0</span> 0
+tmpfs /var/run          tmpfs defaults,noatime,nosuid,mode<span class="o">=</span>0755,size<span class="o">=</span>2m         <span class="m">0</span> 0
+tmpfs /var/spool/mqueue tmpfs defaults,noatime,nosuid,mode<span class="o">=</span>0700,gid<span class="o">=</span>12,size<span class="o">=</span>30m <span class="m">0</span> 0
+</pre></div>
+</div>
+<ol class="arabic simple" start="7">
+<li>Attach external USB hard drive</li>
+</ol>
+<div class="highlight-shell"><div class="highlight"><pre><span class="c"># All that max_usb_current=1 does is to set GPIO38 input high, which in turn turns on a</span>
+<span class="c"># FET, which connects a second 39K resistor in parallel to an existing one, on pin 5 of</span>
+<span class="c"># U13, the AP2553W6 USB power manager, lifting the current limit from 0.6A to double</span>
+<span class="c"># that (1.2A)</span>
+
+<span class="nv">$ </span>sudo vi /boot/config.txt
+<span class="c"># Added line:</span>
+<span class="nv">max_usb_current</span><span class="o">=</span>1
+
+<span class="nv">$ </span>sudo reboot
+
+<span class="c"># Verify gpio38 value (should be set to high, ie. 1)</span>
+<span class="nv">$ </span>ls /sys/class/gpio
+<span class="nb">export </span>gpiochip0  unexport
+<span class="nv">$ </span><span class="nb">echo </span><span class="m">38</span> &gt; /sys/class/gpio/export
+<span class="nv">$ </span>cat /sys/class/gpio/gpio38/value
+1
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
+<li>Mount external hard drive</li>
+</ol>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>sudo blkid
+/dev/mmcblk0p1: <span class="nv">SEC_TYPE</span><span class="o">=</span><span class="s2">&quot;msdos&quot;</span> <span class="nv">LABEL</span><span class="o">=</span><span class="s2">&quot;boot&quot;</span> <span class="nv">UUID</span><span class="o">=</span><span class="s2">&quot;CB99-4C7E&quot;</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">&quot;vfat&quot;</span>
+/dev/mmcblk0p2: <span class="nv">UUID</span><span class="o">=</span><span class="s2">&quot;1263ae8d-aaf3-41b6-9ac0-03e7fecb5d6a&quot;</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">&quot;ext4&quot;</span>
+/dev/sda5: <span class="nv">LABEL</span><span class="o">=</span><span class="s2">&quot;NEWSMY&quot;</span> <span class="nv">UUID</span><span class="o">=</span><span class="s2">&quot;9A60889860887CAF&quot;</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">&quot;ntfs&quot;</span>
+
+<span class="nv">$ </span>sudo mkfs.vfat -n <span class="s1">&#39;usbdisk&#39;</span> -I /dev/sda5
+<span class="nv">$ </span>sudo blkid
+/dev/mmcblk0p1: <span class="nv">SEC_TYPE</span><span class="o">=</span><span class="s2">&quot;msdos&quot;</span> <span class="nv">LABEL</span><span class="o">=</span><span class="s2">&quot;boot&quot;</span> <span class="nv">UUID</span><span class="o">=</span><span class="s2">&quot;CB99-4C7E&quot;</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">&quot;vfat&quot;</span>
+/dev/mmcblk0p2: <span class="nv">UUID</span><span class="o">=</span><span class="s2">&quot;1263ae8d-aaf3-41b6-9ac0-03e7fecb5d6a&quot;</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">&quot;ext4&quot;</span>
+/dev/sda5: <span class="nv">LABEL</span><span class="o">=</span><span class="s2">&quot;usbdisk&quot;</span> <span class="nv">UUID</span><span class="o">=</span><span class="s2">&quot;61A7-F4D8&quot;</span> <span class="nv">TYPE</span><span class="o">=</span><span class="s2">&quot;vfat&quot;</span>
+
+<span class="nv">$ </span>sudo mkdir /media/usbhdd
+<span class="nv">$ </span>sudo mount -t vfat -o <span class="nv">uid</span><span class="o">=</span>pi,gid<span class="o">=</span>pi /dev/sdb5 /media/usbhdd
+
+<span class="nv">$ </span>sudo vi /etc/fstab <span class="c"># add</span>
+<span class="nv">UUID</span><span class="o">=</span><span class="s2">&quot;61A7-F4D8&quot;</span> /media/usbhdd   vfat    defaults,uid<span class="o">=</span>pi,gid<span class="o">=</span>pi                 <span class="m">0</span> 0
+
+<span class="nv">$ </span>sudo reboot
+<span class="nv">$ </span>df -h
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li>Change hostname</li>
+</ol>
+<div class="highlight-shell"><div class="highlight"><pre><span class="nv">$ </span>sudo hostname pi01
+
+<span class="nv">$ </span>sudo vi /etc/hostname <span class="c"># change to</span>
+pi01
+
+<span class="nv">$ </span>sudo vi /etc/hosts <span class="c"># add line</span>
+127.0.0.1 pi01
+
+<span class="nv">$ </span>sudo /etc/init.d/hostname.sh start
+
+<span class="nv">$ </span><span class="nb">exit</span>
+<span class="nv">$ </span>ssh pi@pi01
+<span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$HOSTNAME</span>
+pi01
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -277,8 +400,9 @@ We&#8217;ll leave 2 ports for external working network. 12 + 1x2 + 2 = 16</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">1. Raspberry Pi 2 B Cluster</a><ul>
-<li><a class="reference internal" href="#component">1.1. Component</a></li>
-<li><a class="reference internal" href="#intallation">1.2. Intallation</a></li>
+<li><a class="reference internal" href="#parts">1.1. Parts</a></li>
+<li><a class="reference internal" href="#installation-hardware">1.2. Installation - Hardware</a></li>
+<li><a class="reference internal" href="#installation-software">1.3. Installation - Software</a></li>
 </ul>
 </li>
 </ul>

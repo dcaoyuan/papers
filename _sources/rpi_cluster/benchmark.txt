@@ -3,6 +3,8 @@ Analysis of Scale-out Ability of Akka Sharding cluster
 
 跟很多分片集群解决方案不同，akka 分片集群（sharding cluster）中每一个节点都在直接访问本地数据的同时，也都可以作为 proxy 访问集群中其它节点的数据。在我看来，这是 akka 分片集群水平扩展（scale-out）能力可能接近线性的关键。
 
+Comparing to some sharding solutions, Akka let you access whole sharding cluster data via any node.
+
 Benchmark
 -------
 

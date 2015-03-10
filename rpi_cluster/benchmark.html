@@ -48,6 +48,7 @@
   <div class="section" id="analysis-of-scale-out-ability-of-akka-sharding-cluster">
 <h1>2. Analysis of Scale-out Ability of Akka Sharding cluster<a class="headerlink" href="#analysis-of-scale-out-ability-of-akka-sharding-cluster" title="Permalink to this headline">¶</a></h1>
 <p>跟很多分片集群解决方案不同，akka 分片集群（sharding cluster）中每一个节点都在直接访问本地数据的同时，也都可以作为 proxy 访问集群中其它节点的数据。在我看来，这是 akka 分片集群水平扩展（scale-out）能力可能接近线性的关键。</p>
+<p>Comparing to some sharding solutions, Akka let you access whole sharding cluster data via any node.</p>
 <div class="section" id="benchmark">
 <h2>2.1. Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this headline">¶</a></h2>
 <p>在采用 Raspberry Pi 2 Model B 组成的 10 x nodes cluster ，我用 astore 测试了 akka 分片的水平扩展能力，结果显示出非常好的线性。我们不妨在此做个简单的分析。</p>
